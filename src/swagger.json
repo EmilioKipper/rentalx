@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "RentalX Documentation",
+    "title": "RentX Documentation",
     "description": "This is an API Rent",
     "version": "1.0.0"
   },
@@ -79,24 +79,43 @@
         }
       }
     },
+    "/categories/import": {
+      "post": {
+        "tags": ["Category"],
+        "summary": "Upload categories from CSV",
+        "description": "Upload categories from CSV",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
     "/specifications": {
       "post": {
-        "tags": ["Specification"],
+        "tags": ["Specifications"],
         "summary": "Create a specification",
         "description": "Create a new specification",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/definitions/Specification"
               },
               "example": {
                 "name": "specification name sample",
@@ -112,6 +131,20 @@
           "500": {
             "description": "Specification already exists"
           }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "Specification": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }, 
+        "description": {
+          "type": "string"
         }
       }
     }
