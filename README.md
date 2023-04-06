@@ -1,3 +1,5 @@
+Necessário criar um arquivo .env com sua chave para o JWT, confome .env.example.
+
 Com o docker instalado, rodar o seguinte comando para criar a imagem:
 `docker build -t rentx`
 
