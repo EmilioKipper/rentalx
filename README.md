@@ -7,3 +7,5 @@ Depois, com a imagem criada, rodar:
 Roda o arquivo do docker-compose, que é equivalente aos comandos acima
 `docker-compose up`
 adicionando a flag `-d` ao comando, ele roda em background, liberando o terminal
+
+Caso apareça algum erro, reiniciar o docker: `docker-compose down` -> `docker-compose up -d` -> após o servidor estar rodando -> `yarn typeorm migration:run`
