@@ -40,7 +40,6 @@ export async function ensureAuthenticated(
 
     next();
   } catch (e) {
-    console.log(e);
     throw new AppError("Invalid token", 401);
   }
 }
