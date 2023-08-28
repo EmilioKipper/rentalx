@@ -46,7 +46,7 @@ class CreateRentalUseCase {
     }
 
     const compare = this.dateProvider.compareInHours(
-      new Date(),
+      this.dateProvider.dateNow(),
       expected_return_date
     );
 
