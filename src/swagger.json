@@ -42,7 +42,7 @@
           "201": {
             "description": "Created"
           },
-          "500": {
+          "400": {
             "description": "Category already exists"
           }
         }
@@ -143,7 +143,7 @@
           "201": {
             "description": "Created"
           },
-          "500": {
+          "400": {
             "description": "Specification already exists"
           }
         }
@@ -177,6 +177,40 @@
           },
           "400": {
             "description": "Email or password incorrect!"
+          }
+        }
+      }
+    },
+    "/refresh-token": {
+      "post": {
+        "tags": ["Session"],
+        "description": "Get refresh token",
+        "summary": "Get refresh token",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Refresh token does not exists!"
           }
         }
       }
@@ -251,6 +285,232 @@
           }
         }
       }
+    },
+    "/cars/available": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "List available cars",
+        "description": "List available cars",        
+        "responses": {
+          "200": {
+            "description": "Array of available cars"
+          }
+        }
+      }
+    },
+    "/cars/specifications/{id}": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Add specification to car",
+        "description": "Add specification to car",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Car id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "specifications_id": {
+                    "type": "array"
+                  }
+                }
+              },
+              "example": {
+                "specifications_id": ["spec_id1", "spec_id2"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Car does not exists!"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create user (only for admin users)",
+        "description": "Create user (only for admin users)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "User already exists!"
+          }
+        }
+      }
+    },
+    "/users/avatar": {
+      "tags": ["Users"],
+      "summary": "Add avatar to user (admin only)",
+      "description": "Add avatar to user (admin only)",
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "avatar": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "204": {
+          "description": "Updated"
+        }
+      }
+    },
+    "/rentals": {
+      "post": {
+        "tags": ["Rentals"],
+        "summary": "Create rental",
+        "description": "Create rental",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/Rental"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Car is unavailable | There's a rental in progress for this user! | Invalid return time!"
+          }
+        }
+      }
+    },
+    "/rentals/devolution/{id}": {
+      "post": {
+        "tags": ["Rentals"],
+        "summary": "Devolution of a car",
+        "description": "Devolution of a car",
+        "security": [{ "bearerAuth": [] }],
+        "parameters":          [ {
+          "name": "id",
+          "in": "path",
+          "description": "Rental id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Rental does not exists"
+          }
+        }
+      }
+    },
+    "/rentals/user": {
+      "get": {
+        "tags": ["Rentals"],
+        "summary": "List rentals by user",
+        "description": "List rentals by user",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Array of rentals"
+          }
+        }
+      }
+    },
+    "/password/forgot": {
+      "post": {
+        "tags": ["Password"],
+        "description": "Send forgot password mail",
+        "summary": "Send forgot password mail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Send forgot password mail"
+          },
+          "400": {
+            "description": "User does not exists!"
+          }
+        }
+      }
+    },
+    "/password/reset": {
+      "post": {
+        "tags": ["Password"],
+        "description": "Reset password",
+        "summary": "Reset password",
+        "parameters": [{
+          "name": "token",
+          "in": "query",
+          "description": "Reset password token",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Token invalid! | Token expired!"
+          }
+        }
+      }
     }
   },
 
@@ -288,6 +548,34 @@
           "type": "string"
         },
         "category_id": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "driver_license": {
+          "type": "string"
+        }
+      }
+    },
+    "Rental": {
+      "type": "object",
+      "properties": {
+        "expected_return_date": {
+          "type": "string"
+        },
+        "car_id": {
           "type": "string"
         }
       }
