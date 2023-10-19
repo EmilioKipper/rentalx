@@ -10,11 +10,13 @@ import { AppError } from "@shared/errors/AppError";
 import createConnection from "@shared/infra/typeorm";
 
 import swaggerConfig from "../../../swagger.json";
+import { rateLimiterMiddleware } from "./middlewares/rateLimiter";
 import { router } from "./routes";
 
 createConnection();
 const app = express();
 
+app.use(rateLimiterMiddleware);
 app.use(express.json());
 app.use("/avatar", express.static(`${upload.tmpFolder}/avatar`));
 app.use("/cars", express.static(`${upload.tmpFolder}/cars`));
